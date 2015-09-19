@@ -1,6 +1,6 @@
 # Introduction
 
-This project provides a fast approximative string search based on the Damerau-Levenshtein distance. It consists of two parts:
+This project provides a fast approximate string search based on the Damerau-Levenshtein distance. It consists of two parts:
 
 * the *compiler* that serializes a dictionnary of words into a Patricia trie;
 * the *approximator* that loads the trie and reads search queries from its standard input.
