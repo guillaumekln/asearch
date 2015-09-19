@@ -6,7 +6,7 @@
 
 std::string PTrie::strs;
 
-void PTrie::addWord(const std::string& word, unsigned int frequency)
+void PTrie::add_word(const std::string& word, unsigned int frequency)
 {
   _root.insert(word, frequency);
 }
@@ -38,7 +38,7 @@ void PTrie::serialize(const std::string& filename) const
   queue.push(nullptr);
 
   size_t i = 0;
-  size_t children = _root.getEdges().size();
+  size_t children = _root.get_edges().size();
   size_t children_next = 0;
 
   // Virtual edge to represent the trie's root
@@ -56,34 +56,24 @@ void PTrie::serialize(const std::string& filename) const
       if (!queue.empty())
         queue.push(nullptr);
     }
-    else if (!n->getEdges().empty())
+    else if (!n->get_edges().empty())
     {
-      for (const Edge& e: n->getEdges())
+      for (const Edge& e: n->get_edges())
       {
         serialize(out,
-                  e.getOffset(),
-                  e.getLength(),
-                  e.getTargetNode().getFrequency(),
-                  e.getTargetNode().getEdges().size(),
-                  e.getTargetNode().getEdges().empty() ? 0 : ((children - i) + children_next));
+                  e.get_offset(),
+                  e.get_length(),
+                  e.get_target_node().get_frequency(),
+                  e.get_target_node().get_edges().size(),
+                  e.get_target_node().get_edges().empty() ? 0 : ((children - i) + children_next));
 
         i++;
-        children_next += e.getTargetNode().getEdges().size();
-        queue.push(&e.getTargetNode());
+        children_next += e.get_target_node().get_edges().size();
+        queue.push(&e.get_target_node());
       }
     }
   } while (!queue.empty());
 }
-
-std::ostream& operator<<(std::ostream& os, const PTrie& pt)
-{
-  os << "# " << PTrie::strs << std::endl;
-  os << "digraph g {" << std::endl;
-  pt._root.toDot(os);
-  os << "}";
-  return os;
-}
-
 
 PTrie::Node::Node(unsigned int frequency)
   : _frequency(frequency)
@@ -109,24 +99,24 @@ void PTrie::Node::insert(const std::string& word, unsigned int frequency)
   // Search for a common prefix
   for (it = _edges.begin(); it != _edges.end(); ++it)
   {
-    if (strs[it->getOffset()] == word[0]) // Found one.
+    if (strs[it->get_offset()] == word[0]) // Found one.
     {
       unsigned int prefixlen = 1;
 
       // Computing the prefix length.
       for (;
-           prefixlen < it->getLength() && prefixlen < word.length()
-             && strs[it->getOffset() + prefixlen] == word[prefixlen];
+           prefixlen < it->get_length() && prefixlen < word.length()
+             && strs[it->get_offset() + prefixlen] == word[prefixlen];
            ++prefixlen)
       {
       }
 
       // Split the edge if the common prefix is not the complete substring.
-      if (it->getLength() > prefixlen)
+      if (it->get_length() > prefixlen)
         it->split(prefixlen);
 
       // Insert the word without the prefix in the child node.
-      it->getTargetNode().insert(word.substr(prefixlen, word.length() - prefixlen), frequency);
+      it->get_target_node().insert(word.substr(prefixlen, word.length() - prefixlen), frequency);
       break;
     }
   }
@@ -142,68 +132,53 @@ void PTrie::Node::insert(const std::string& word, unsigned int frequency)
   _edges.emplace_back(offset, length, frequency);
 }
 
-unsigned int PTrie::Node::getFrequency() const
+unsigned int PTrie::Node::get_frequency() const
 {
   return _frequency;
 }
 
-const std::list<PTrie::Edge>& PTrie::Node::getEdges() const
+const std::list<PTrie::Edge>& PTrie::Node::get_edges() const
 {
   return _edges;
 }
 
-std::list<PTrie::Edge>& PTrie::Node::getEdges()
+std::list<PTrie::Edge>& PTrie::Node::get_edges()
 {
   return _edges;
-}
-
-void PTrie::Node::toDot(std::ostream& os) const
-{
-  os << "n" << this;
-  if (_frequency != 0)
-    os << " [shape=box]";
-  os << ";" << std::endl;
-
-  for (const Edge& e: _edges)
-  {
-    os << "n" << this << " -> " << "n" << &e.getTargetNode()
-       << " [label=\"" << std::string(strs, e.getOffset(), e.getLength()) << "\"];" << std::endl;
-    e.getTargetNode().toDot(os);
-  }
 }
 
 
 PTrie::Edge::Edge(unsigned int offset, unsigned int length, unsigned int frequency)
   : _offset(offset)
   , _length(length)
-  , _targetNode(frequency)
+  , _target_node(frequency)
 {
 }
 
 void PTrie::Edge::split(unsigned int size)
 {
   Edge e(_offset + size, _length - size, 0);
-  std::swap(_targetNode, e.getTargetNode());
+  std::swap(_target_node, e.get_target_node());
   _length = size;
-  _targetNode.getEdges().push_back(std::move(e));
+  _target_node.get_edges().push_back(std::move(e));
 }
 
-const PTrie::Node& PTrie::Edge::getTargetNode() const
+const PTrie::Node& PTrie::Edge::get_target_node() const
 {
-  return _targetNode;
+  return _target_node;
 }
 
-PTrie::Node& PTrie::Edge::getTargetNode()
+PTrie::Node& PTrie::Edge::get_target_node()
 {
-  return _targetNode;
+  return _target_node;
 }
 
-unsigned int PTrie::Edge::getOffset() const
+unsigned int PTrie::Edge::get_offset() const
 {
   return _offset;
 }
 
-unsigned int PTrie::Edge::getLength() const
+unsigned int PTrie::Edge::get_length() const
 {
   return _length;
 }

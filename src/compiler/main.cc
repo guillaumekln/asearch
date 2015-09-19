@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
     size_t delimiter = line.find_first_of('\t');
     std::string word(line, 0, delimiter);
     unsigned long freq = std::stoul(line.c_str() + delimiter);
-    pt.addWord(word, freq);
+    pt.add_word(word, freq);
   }
 
   pt.serialize(argv[2]);

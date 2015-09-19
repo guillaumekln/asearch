@@ -16,7 +16,7 @@ public:
    * \param word The new word.
    * \param frequency The frequency of the word.
    */
-  void addWord(const std::string& word, unsigned int frequency);
+  void add_word(const std::string& word, unsigned int frequency);
 
   /**
    * \brief Serialize the trie.
@@ -24,13 +24,6 @@ public:
    * \param filename The path to the serialized trie.
    */
   void serialize(const std::string& filename) const;
-
-  /**
-   * \brief Debug output.
-   *
-   * Print the trie in the dot format.
-   */
-  friend std::ostream& operator<<(std::ostream& os, const PTrie& pt);
 
 private:
   // Forward declaration.
@@ -72,14 +65,14 @@ private:
      *
      * \return The list of edges.
      */
-    const std::list<Edge>& getEdges() const;
+    const std::list<Edge>& get_edges() const;
 
     /**
      * \brief Get the edges associated to this node.
      *
      * \return The list of edges.
      */
-    std::list<Edge>& getEdges();
+    std::list<Edge>& get_edges();
 
     /**
      * \brief Get the frequency of the node.
@@ -88,12 +81,7 @@ private:
      *
      * \return The frequency.
      */
-    unsigned int getFrequency() const;
-
-    /**
-     * \brief Output this node in the dot format.
-     */
-    void toDot(std::ostream& os) const;
+    unsigned int get_frequency() const;
 
   private:
     unsigned int _frequency;
@@ -130,27 +118,27 @@ private:
     /**
      * \brief Get the target node (const version).
      */
-    const Node& getTargetNode() const;
+    const Node& get_target_node() const;
 
     /**
-     * \brief Get the target node (const version).
+     * \brief Get the target node.
      */
-    Node& getTargetNode();
+    Node& get_target_node();
 
     /**
      * \brief Get the offset of the char sequence.
      */
-    unsigned int getOffset() const;
+    unsigned int get_offset() const;
 
     /**
      * \brief Get the length of the char sequence.
      */
-    unsigned int getLength() const;
+    unsigned int get_length() const;
 
   private:
     unsigned int _offset;
     unsigned int _length;
-    Node _targetNode;
+    Node _target_node;
   };
 
   Node _root;
