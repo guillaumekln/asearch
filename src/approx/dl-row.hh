@@ -1,17 +1,17 @@
-#ifndef DL_MATRIX_HH
-# define DL_MATRIX_HH
+#ifndef DL_ROW_HH
+# define DL_ROW_HH
 
 # include <string>
 
 /**
- * \brief DLMatrix class.
+ * \brief DLRow class.
  *
- * This class represents the matrix to compute the Damareau-Lenvenstein distance.
+ * This class represents a row of the matrix to compute the Damareau-Lenvenstein distance.
  * Like the trie itself, the matrix is implemented hierarchically. As we recurse
- * in the trie, for each character we add a row (1 row = 1 instance of DLMatrix)
+ * in the trie, for each character we add a row (1 row = 1 instance of DLRow)
  * that is connected to the parent row to avoid data duplication across all the children.
  */
-class DLMatrix
+class DLRow
 {
 public:
   /**
@@ -20,7 +20,7 @@ public:
    * \param width The width of the matrix (i.e. the length of the word to approximate + 1).
    * \param max_dist The maximal distance.
    */
-  DLMatrix(size_t width, unsigned int max_dist);
+  DLRow(size_t width, unsigned int max_dist);
 
   /**
    * \brief Construct a new row.
@@ -33,10 +33,10 @@ public:
    * \param c The character associated to the row.
    * \param max_dist The maximal distance.
    */
-  DLMatrix(const DLMatrix* parent,
-           const std::string& word,
-           char c,
-           unsigned int max_dist);
+  DLRow(const DLRow* parent,
+        const std::string& word,
+        char c,
+        unsigned int max_dist);
 
   /**
    * \brief Get the distance computed so far.
@@ -62,17 +62,17 @@ public:
    *
    * \return true if we can stop, fals otherwise.
    */
-  bool final() const;
+  bool is_final() const;
 
   /**
    * \brief Get the offset of the current row in the total matrix.
    *
    * \return The offfset of the row.
    */
-  size_t offset() const;
+  size_t get_offset() const;
 
 private:
-  const DLMatrix* _parent;
+  const DLRow* _parent;
   size_t _width;
   size_t _offset;
   unsigned int _dist[256];
@@ -85,6 +85,4 @@ private:
   char _c;
 };
 
-# include "dl-matrix.hxx"
-
-# endif /* !DL_MATRIX_HH */
+# endif /* !DL_ROW_HH */

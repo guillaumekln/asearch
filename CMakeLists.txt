@@ -17,6 +17,7 @@ add_executable(compiler
 
 add_executable(approx
   ${PROJECT_SOURCE_DIR}/src/approx/ptrie.cc
+  ${PROJECT_SOURCE_DIR}/src/approx/dl-row.cc
   ${PROJECT_SOURCE_DIR}/src/approx/approx.cc
   ${PROJECT_SOURCE_DIR}/src/approx/main.cc
   )

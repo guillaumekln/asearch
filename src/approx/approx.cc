@@ -1,5 +1,7 @@
-#include <iostream>
 #include "approx.hh"
+
+#include <iostream>
+#include <algorithm>
 
 Approx::Approx(const s_trie* trie)
   : _trie(trie)
@@ -7,15 +9,15 @@ Approx::Approx(const s_trie* trie)
 {
 }
 
-void Approx::handle_sequence(const DLMatrix* parent,
+void Approx::handle_sequence(const DLRow* parent,
                              const s_edge* child,
                              const char* str,
                              size_t offset)
 {
   // Build one row par chararacter in the sequence.
-  DLMatrix childmat(parent, _word, str[offset], _max_dist);
+  DLRow childmat(parent, _word, str[offset], _max_dist);
 
-  if (childmat.final())
+  if (childmat.is_final())
     return;
 
   ++offset;
@@ -24,7 +26,7 @@ void Approx::handle_sequence(const DLMatrix* parent,
   {
     unsigned int d;
 
-    // If this child is word (frequency != 0), check the distance.
+    // If this child is a word (frequency != 0), check the distance.
     if (child->frequency != 0 && (d = childmat.get_dist()) <= _max_dist)
       _results.emplace_back(childmat, child->frequency, d);
 
@@ -37,7 +39,7 @@ void Approx::handle_sequence(const DLMatrix* parent,
 }
 
 void Approx::search_rec(const s_edge* edge,
-                        const DLMatrix* mat)
+                        const DLRow* mat)
 {
   const s_edge* child = get_child(edge);
 
@@ -47,7 +49,7 @@ void Approx::search_rec(const s_edge* edge,
 
 void Approx::search(std::string& word, unsigned int max_dist)
 {
-  DLMatrix mat(word.length() + 1, max_dist);
+  DLRow mat(word.length() + 1, max_dist);
 
   _max_dist = max_dist;
   _word = std::move(word);
@@ -74,11 +76,11 @@ void Approx::search(std::string& word, unsigned int max_dist)
   _results.clear();
 }
 
-Approx::Result::Result(const DLMatrix& mat, unsigned int frequency, unsigned int distance)
+Approx::Result::Result(const DLRow& mat, unsigned int frequency, unsigned int distance)
   : _frequency(frequency)
   , _distance(distance)
 {
-  _word.reserve(mat.offset());
+  _word.reserve(mat.get_offset());
   mat.get_word(_word);
 }
 

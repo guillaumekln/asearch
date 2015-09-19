@@ -1,11 +1,6 @@
-#ifndef DL_MATRIX_HXX
-# define DL_MATRIX_HXX
+#include "dl-row.hh"
 
-# include <iostream>
-# include <algorithm>
-
-inline
-DLMatrix::DLMatrix(size_t width, unsigned int max_dist)
+DLRow::DLRow(size_t width, unsigned int max_dist)
   : _parent(nullptr)
   , _width(width)
   , _offset(0)
@@ -15,11 +10,10 @@ DLMatrix::DLMatrix(size_t width, unsigned int max_dist)
     _dist[i] = i;
 }
 
-inline
-DLMatrix::DLMatrix(const DLMatrix* parent,
-                   const std::string& word,
-                   char c,
-                   unsigned int max_dist)
+DLRow::DLRow(const DLRow* parent,
+             const std::string& word,
+             char c,
+             unsigned int max_dist)
   : _parent(parent)
   , _width(parent->_width)
   , _offset(parent->_offset + 1)
@@ -48,14 +42,12 @@ DLMatrix::DLMatrix(const DLMatrix* parent,
     _dist[j] = max_dist + 1;
 }
 
-inline
-unsigned int DLMatrix::get_dist() const
+unsigned int DLRow::get_dist() const
 {
   return _dist[_width - 1];
 }
 
-inline
-void DLMatrix::get_word(std::string& w) const
+void DLRow::get_word(std::string& w) const
 {
   // Recursively retrieving the word we computed the distance with.
   if (_parent != nullptr)
@@ -65,16 +57,12 @@ void DLMatrix::get_word(std::string& w) const
   }
 }
 
-inline
-bool DLMatrix::final() const
+bool DLRow::is_final() const
 {
   return _maxcol < 0;
 }
 
-inline
-size_t DLMatrix::offset() const
+size_t DLRow::get_offset() const
 {
   return _offset;
 }
-
-# endif /* !DL_MATRIX_HXX */

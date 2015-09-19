@@ -5,7 +5,7 @@
 # include <vector>
 
 # include "ptrie.hh"
-# include "dl-matrix.hh"
+# include "dl-row.hh"
 
 class Approx
 {
@@ -23,7 +23,7 @@ public:
      * \param frequency The frequency of the word.
      * \param distance The distance between this word and the word to approximate.
      */
-    Result(const DLMatrix& mat, unsigned int frequency, unsigned int distance);
+    Result(const DLRow& mat, unsigned int frequency, unsigned int distance);
 
     /**
      * \brief Order the result.
@@ -94,7 +94,7 @@ private:
    * \param str The current sequence.
    * \param offset The current offset in the sequence.
    */
-  void handle_sequence(const DLMatrix* parent,
+  void handle_sequence(const DLRow* parent,
                        const s_edge* child,
                        const char* str,
                        size_t offset);
@@ -109,7 +109,7 @@ private:
    * \param mat The last row of the distance matrix (it will be shared by all children).
    */
   void search_rec(const s_edge* edge,
-                  const DLMatrix* mat);
+                  const DLRow* mat);
 };
 
 # endif /* !APPROX_HH */

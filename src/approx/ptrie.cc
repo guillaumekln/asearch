@@ -1,11 +1,11 @@
+#include "ptrie.hh"
+
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
 
 #include <iostream>
-
-#include "ptrie.hh"
 
 static size_t g_data_size = 0;
 
